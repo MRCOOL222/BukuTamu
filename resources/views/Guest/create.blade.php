@@ -12,10 +12,13 @@
 <body>
     <div class="container">
         <h1 class="text-center">Form Tambah Tamu</h1>
-        <form method="POST" action="{{ route('guests.store') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('guest.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <input type="text" class="form-control" name="nama" placeholder="Nama Pengunjung" required>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="alamat" placeholder="Instansi/Lembaga Pengunjung" required>
             </div>
             <div class="form-group">
                 <input type="text" class="form-control" name="alamat" placeholder="Alamat Pengunjung" required>

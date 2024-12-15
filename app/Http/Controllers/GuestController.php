@@ -14,6 +14,7 @@ class GuestController extends Controller
     public function index()
     {
         $guests = Guest::all(); // Ambil semua data tamu
+        // dd($guests);
         return view('Guest.index', compact('guests')); // Menggunakan 'Guest.index' untuk path view yang benar
     }
 

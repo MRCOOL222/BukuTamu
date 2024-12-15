@@ -2,7 +2,7 @@
 
 @section('title', 'Data Tamu')
 
-@section('content')
+@section('contents')
     <div class="container">
         <h1>Daftar Tamu</h1>
         <a href="{{ route('guest.create') }}" class="btn btn-primary mb-3">Tambah Tamu</a>
@@ -15,7 +15,6 @@
         @endif
         
         <!-- Cek apakah ada data tamu -->
-        @if($guests->count() > 0)
             <table class="table table-bordered">
                 <thead class="table-primary">
                     <tr>
@@ -29,7 +28,7 @@
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody>+
+                <tbody>
                     @foreach ($guests as $rs)
                         <tr>
                             <td class="align-middle">{{ $loop->iteration }}</td>
@@ -58,8 +57,5 @@
                     @endforeach
                 </tbody>
             </table>
-        @else
-            <p class="text-center">Data Tamu tidak ditemukan.</p>
-        @endif
     </div>
 @endsection
