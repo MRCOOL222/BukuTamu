@@ -4,23 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Guest extends Model
 {
     use HasFactory;
 
-    // Tentukan nama tabel jika berbeda dengan nama model
     protected $table = 'guests';
 
     // Tentukan atribut yang dapat diisi (fillable)
     protected $fillable = [
-        'nama', 'tujuan', 'instansi', 'alamat', 'no_hp', 'foto'
+        'id', 'nama', 'tujuan', 'instansi', 'alamat', 'no_hp', 'foto'
     ];
 
-    // Jika foto adalah nullable dan disimpan secara terpisah, Anda bisa mengonfigurasi pathnya di sini
+    // Accessor untuk mendapatkan URL foto
     public function getFotoAttribute($value)
     {
-        return $value ? asset('storage/' . $value) : null;
+        return $value ? Storage::url($value) : null; // Menghasilkan URL foto dari folder public/uploads/
     }
 }
-

@@ -1,24 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Tamu</title>
+@extends('layouts.app')
 
-    <!-- Include required CSS and JS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
+@section('title', 'Tambah Tamu')
+
+@section('contents')
     <div class="container">
-        <h1 class="text-center">Form Tambah Tamu</h1>
+        <h1>Tambah Tamu</h1>
         <form method="POST" action="{{ route('guest.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <input type="text" class="form-control" name="nama" placeholder="Nama Pengunjung" required>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control" name="alamat" placeholder="Instansi/Lembaga Pengunjung" required>
+                <input type="text" class="form-control" name="instansi" placeholder="Instansi Pengunjung" required>
             </div>
             <div class="form-group">
                 <input type="text" class="form-control" name="alamat" placeholder="Alamat Pengunjung" required>
@@ -30,16 +23,17 @@
                 <input type="text" class="form-control" name="no_hp" placeholder="No.HP Pengunjung" required>
             </div>
 
+            <!-- Input hidden untuk foto -->
+            <input type="hidden" name="foto" id="foto_input" />
+
             <div class="form-group">
                 <label for="foto">Ambil Foto Pengunjung:</label>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cameraModal">
+                <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#cameraModal">
                     Ambil Foto
                 </button>
             </div>
 
-            <input type="hidden" name="foto" id="foto_input"/>
-
-            <button type="submit" class="btn btn-primary">Simpan</button>
+            <button type="submit" name="bsimpan" class="btn btn-primary btn-block">Simpan</button>
         </form>
     </div>
 
@@ -54,7 +48,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <video id="video" width="100%" autoplay></video>
+                    <video id="video" width="100%" height="auto" autoplay></video>
                     <canvas id="canvas" style="display: none;"></canvas>
                     <img id="foto" style="display: none;" src="" alt="Foto Pengunjung" width="100%">
 
@@ -69,6 +63,7 @@
     </div>
 
     <script>
+        // Menampilkan video
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const foto = document.getElementById('foto');
@@ -84,6 +79,7 @@
                 console.error("Error accessing webcam:", error);
             });
 
+        // Ambil foto
         captureButton.addEventListener('click', function () {
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
@@ -97,6 +93,7 @@
             fotoInput.value = dataUrl; // Simpan foto ke input tersembunyi
         });
 
+        // Pencet ulang
         retakeButton.addEventListener('click', function () {
             foto.style.display = 'none';
             captureButton.style.display = 'block';
@@ -104,9 +101,4 @@
             fotoInput.value = ''; // Clear the photo input
         });
     </script>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+@endsection

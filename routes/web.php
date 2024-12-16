@@ -18,12 +18,4 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Route untuk CRUD Guest menggunakan controller dan prefix 'guest'
-Route::controller(GuestController::class)->prefix('guest')->middleware('auth')->group(function () {
-    Route::get('', 'index')->name('guest.index');          // Menampilkan daftar tamu
-    Route::get('create', 'create')->name('guest.create');  // Menampilkan form untuk tambah tamu
-    Route::post('store', 'store')->name('guest.store');     // Menyimpan tamu baru
-    Route::get('show/{id}', 'show')->name('guest.show');    // Menampilkan detail tamu
-    Route::get('edit/{id}', 'edit')->name('guest.edit');    // Menampilkan form untuk edit tamu
-    Route::put('edit/{id}', 'update')->name('guest.update'); // Mengupdate tamu
-    Route::delete('destroy/{id}', 'destroy')->name('guest.destroy'); // Menghapus tamu
-});
+Route::resource('guest', GuestController::class);
