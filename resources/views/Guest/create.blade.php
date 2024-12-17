@@ -3,28 +3,34 @@
 @section('title', 'Tambah Tamu')
 
 @section('contents')
-    <div class="container">
+
         <h1>Tambah Tamu</h1>
-        <form method="POST" action="{{ route('guest.store') }}" enctype="multipart/form-data">
+        <form id="guestForm" method="POST" action="{{ route('guest.store') }}" enctype="multipart/form-data" novalidate>
             @csrf
             <div class="form-group">
                 <input type="text" class="form-control" name="nama" placeholder="Nama Pengunjung" required>
+                <div class="invalid-feedback">Nama Pengunjung wajib diisi.</div>
             </div>
             <div class="form-group">
                 <input type="text" class="form-control" name="instansi" placeholder="Instansi Pengunjung" required>
+                <div class="invalid-feedback">Instansi Pengunjung wajib diisi.</div>
             </div>
             <div class="form-group">
                 <input type="text" class="form-control" name="alamat" placeholder="Alamat Pengunjung" required>
+                <div class="invalid-feedback">Alamat Pengunjung wajib diisi.</div>
             </div>
             <div class="form-group">
                 <input type="text" class="form-control" name="tujuan" placeholder="Tujuan Pengunjung" required>
+                <div class="invalid-feedback">Tujuan Pengunjung wajib diisi.</div>
             </div>
             <div class="form-group">
                 <input type="text" class="form-control" name="no_hp" placeholder="No.HP Pengunjung" required>
+                <div class="invalid-feedback">No.HP Pengunjung wajib diisi.</div>
             </div>
 
             <!-- Input hidden untuk foto -->
-            <input type="hidden" name="foto" id="foto_input" />
+            <input type="hidden" name="foto" id="foto_input" required>
+            <div class="invalid-feedback" id="fotoError">Foto Pengunjung wajib diisi.</div>
 
             <div class="form-group">
                 <label for="foto">Ambil Foto Pengunjung:</label>
@@ -62,6 +68,9 @@
         </div>
     </div>
 
+    <!-- SweetAlert CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         // Menampilkan video
         const video = document.getElementById('video');
@@ -70,6 +79,7 @@
         const captureButton = document.getElementById('capture');
         const retakeButton = document.getElementById('retake');
         const fotoInput = document.getElementById('foto_input');
+        const fotoError = document.getElementById('fotoError');
 
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function (stream) {
@@ -91,6 +101,7 @@
             captureButton.style.display = 'none';
             retakeButton.style.display = 'block';
             fotoInput.value = dataUrl; // Simpan foto ke input tersembunyi
+            fotoError.style.display = 'none'; // Hilangkan pesan error
         });
 
         // Pencet ulang
@@ -100,5 +111,34 @@
             retakeButton.style.display = 'none';
             fotoInput.value = ''; // Clear the photo input
         });
+
+        // Validasi form
+        const form = document.getElementById('guestForm');
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            // Validasi foto
+            if (!fotoInput.value) {
+                fotoError.style.display = 'block';
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            form.classList.add('was-validated');
+        });
+
+        // SweetAlert Notification
+        @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil!',
+            text: '{{ session('success') }}',
+            showConfirmButton: false,
+            timer: 2000
+        });
+        @endif
     </script>
 @endsection

@@ -2,7 +2,7 @@
 
 @section('title', 'Edit Tamu')
 
-@section('content')
+@section('contents')
     <div class="container">
         <h1>Edit Tamu</h1>
         <form action="{{ route('guest.update', $guest->id) }}" method="POST" enctype="multipart/form-data">
@@ -44,4 +44,17 @@
             <button type="submit" class="btn btn-primary mt-3">Update</button>
         </form>
     </div>
+
+    <!-- Tambahkan script SweetAlert -->
+    @if (session('success'))
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            Swal.fire({
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
 @endsection

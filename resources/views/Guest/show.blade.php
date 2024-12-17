@@ -2,7 +2,7 @@
 
 @section('title', 'Detail Tamu')
 
-@section('content')
+@section('contents')
     <div class="container">
         <h1>Detail Tamu</h1>
         <table class="table table-bordered">

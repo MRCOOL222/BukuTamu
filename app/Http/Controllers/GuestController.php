@@ -23,54 +23,54 @@ class GuestController extends Controller
     }
 
     public function store(Request $request)
-{
-    // Validasi input
-    $validated = $request->validate([
-        'nama' => 'required|string|max:255',
-        'alamat' => 'required|string|max:255',
-        'tujuan' => 'required|string|max:255',
-        'instansi' => 'required|string|max:255',
-        'no_hp' => 'required|string|max:20',
-        'foto' => 'required|string', // Pastikan Base64 valid
-    ]);
+    {
+        // Validasi input
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'alamat' => 'required|string|max:255',
+            'tujuan' => 'required|string|max:255',
+            'instansi' => 'required|string|max:255',
+            'no_hp' => 'required|string|max:20',
+            'foto' => 'required|string', // Pastikan Base64 valid
+        ]);
 
-    // Ambil data foto Base64
-    $fotoData = $request->foto; 
+        // Ambil data foto Base64
+        $fotoData = $request->foto; 
 
-    // Pisahkan data Base64 menjadi tipe dan konten
-    if (preg_match('/^data:image\/(\w+);base64,/', $fotoData, $type)) {
-        $imageType = strtolower($type[1]); // jpg, png, gif, etc.
+        // Pisahkan data Base64 menjadi tipe dan konten
+        if (preg_match('/^data:image\/(\w+);base64,/', $fotoData, $type)) {
+            $imageType = strtolower($type[1]); // jpg, png, gif, etc.
 
-        // Validasi tipe file
-        if (!in_array($imageType, ['jpg', 'jpeg', 'png', 'gif'])) {
-            return back()->withErrors(['foto' => 'Format gambar tidak didukung!']);
+            // Validasi tipe file
+            if (!in_array($imageType, ['jpg', 'jpeg', 'png', 'gif'])) {
+                return back()->withErrors(['foto' => 'Format gambar tidak didukung!']);
+            }
+
+            $imageBase64 = base64_decode(substr($fotoData, strpos($fotoData, ',') + 1));
+
+            // Generate nama file yang unik
+            $fotoName = uniqid() . '.' . $imageType;
+
+            // Simpan ke folder storage/app/public/uploads
+            $filePath = 'uploads/' . $fotoName; // Path relatif untuk database
+            Storage::disk('public')->put($filePath, $imageBase64);
+        } else {
+            return back()->withErrors(['foto' => 'Format data gambar tidak valid!']);
         }
 
-        $imageBase64 = base64_decode(substr($fotoData, strpos($fotoData, ',') + 1));
+        // Simpan data tamu ke database
+        $guest = new Guest();
+        $guest->nama = $request->nama;
+        $guest->alamat = $request->alamat;
+        $guest->tujuan = $request->tujuan;
+        $guest->instansi = $request->instansi;
+        $guest->no_hp = $request->no_hp;
+        $guest->foto = $filePath; // Simpan path relatif
+        $guest->tanggal = now(); // Simpan tanggal hari ini
+        $guest->save();
 
-        // Generate nama file yang unik
-        $fotoName = uniqid() . '.' . $imageType;
-
-        // Simpan ke folder storage/app/public/uploads
-        $filePath = 'uploads/' . $fotoName; // Path relatif untuk database
-        Storage::disk('public')->put($filePath, $imageBase64);
-    } else {
-        return back()->withErrors(['foto' => 'Format data gambar tidak valid!']);
+        return redirect()->route('guest.index')->with('success', 'Data tamu berhasil disimpan!');
     }
-
-    // Simpan data tamu ke database
-    $guest = new Guest();
-    $guest->nama = $request->nama;
-    $guest->alamat = $request->alamat;
-    $guest->tujuan = $request->tujuan;
-    $guest->instansi = $request->instansi;
-    $guest->no_hp = $request->no_hp;
-    $guest->foto = $filePath; // Simpan path relatif
-    $guest->save();
-
-    return redirect()->route('guest.index')->with('success', 'Data tamu berhasil disimpan!');
-}
-
 
     // Menampilkan form untuk mengedit data tamu
     public function edit($id)

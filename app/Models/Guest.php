@@ -14,7 +14,12 @@ class Guest extends Model
 
     // Tentukan atribut yang dapat diisi (fillable)
     protected $fillable = [
-        'id', 'nama', 'tujuan', 'instansi', 'alamat', 'no_hp', 'foto'
+        'id', 'nama', 'tujuan', 'instansi', 'alamat', 'no_hp', 'foto', 'tanggal'
+    ];
+
+    // Cast tanggal ke format datetime:Y-m-d
+    protected $casts = [
+        'tanggal' => 'datetime:Y-m-d', // Format otomatis ke Y-m-d
     ];
 
     // Accessor untuk mendapatkan URL foto

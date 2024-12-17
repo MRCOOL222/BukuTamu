@@ -12,13 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('guests', function (Blueprint $table) {
-            $table->id(); 
+            $table->id();
             $table->string('nama');
             $table->string('tujuan');
             $table->string('instansi');
             $table->string('alamat');
             $table->string('no_hp');
             $table->string('foto')->nullable();
+            $table->date('tanggal'); // Tambahkan kolom tanggal dengan tipe DATE
             $table->timestamps();
         });
     }
