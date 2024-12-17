@@ -5,7 +5,7 @@
       <div class="sidebar-brand-icon rotate-n-15">
         <i class="fas fa-laugh-wink"></i>
       </div>
-      <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+      <div class="sidebar-brand-text mx-3">SI BukTa <sup></sup></div>
     </a>
     
     <!-- Divider -->
@@ -23,13 +23,6 @@
       <a class="nav-link" href="{{ route('guest.index') }}">
         <i class="fas fa-fw fa-users"></i>
         <span>Data Tamu</span></a>
-    </li>
-    
-    <!-- Nav Item - Profile -->
-    <li class="nav-item">
-      <a class="nav-link" href="{{ route('profile') }}">
-        <i class="fas fa-fw fa-user"></i>
-        <span>Profile</span></a>
     </li>
     
     <!-- Divider -->
