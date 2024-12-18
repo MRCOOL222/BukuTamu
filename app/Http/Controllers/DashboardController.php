@@ -15,6 +15,7 @@ class DashboardController extends Controller
                        ->groupBy('tanggal')
                        ->orderBy('tanggal')
                        ->get();
+        
 
         // Mengirim data tamu berdasarkan tanggal ke view
         return view('dashboard', compact('guests'));

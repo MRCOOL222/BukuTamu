@@ -11,15 +11,17 @@ class GuestController extends Controller
     // Menampilkan daftar tamu
     public function index()
     {
+        // Pagination
+        $guests = Guest::paginate(5); // Menampilkan 5 data per halaman
+        return view('guest.index', compact('guests'));
         // Mengambil semua data tamu
         $guests = Guest::all();
         return view('guest.index', compact('guests')); // Pastikan view 'guest.index' ada
     }
 
-    // Menampilkan form untuk membuat tamu baru
     public function create()
     {
-        return view('guest.create'); // Pastikan view 'guest.create' ada untuk form input
+        return view('guest.create');
     }
 
     public function store(Request $request)

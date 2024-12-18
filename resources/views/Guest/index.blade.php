@@ -14,6 +14,7 @@
                     <th>Nama</th>
                     <th>Alamat</th>
                     <th>Tujuan</th>
+                    <th>Instansi</th>
                     <th>No.HP</th>
                     <th>Foto</th>
                     <th>Aksi</th>
@@ -22,11 +23,12 @@
             <tbody>
                 @foreach ($guests as $index => $rs)
                     <tr>
-                        <td>{{ $index + 1 }}</td>
+                        <td>{{ ($guests->currentPage() - 1) * $guests->perPage() + $loop->iteration }}</td>
                         <td>{{ \Carbon\Carbon::parse($rs->tanggal)->format('Y-m-d') }}</td> <!-- Format tanggal -->
                         <td>{{ $rs->nama }}</td>
                         <td>{{ $rs->alamat }}</td>
                         <td>{{ $rs->tujuan }}</td>
+                        <td>{{ $rs->instansi }}</td>
                         <td>{{ $rs->no_hp }}</td>
                         <td>
                             <!-- Menampilkan foto dari folder storage/uploads -->
@@ -40,6 +42,11 @@
                 @endforeach
             </tbody>
         </table>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-center mt-3">
+            {{ $guests->onEachSide(1)->links('pagination::bootstrap-4') }}
+        </div>
     </div>
 
     <!-- Modal Konfirmasi Hapus -->
