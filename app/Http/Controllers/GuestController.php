@@ -9,14 +9,24 @@ use Illuminate\Support\Facades\Storage;
 class GuestController extends Controller
 {
     // Menampilkan daftar tamu
-    public function index()
+    public function index(Request $request)
     {
-        // Pagination
-        $guests = Guest::paginate(5); // Menampilkan 5 data per halaman
+        // Ambil input pencarian
+        $search = $request->input('search');
+
+        // Query untuk mengambil tamu berdasarkan pencarian
+        $guests = Guest::query()
+            ->when($search, function ($query) use ($search) {
+                return $query->where('nama', 'like', "%$search%")
+                             ->orWhere('alamat', 'like', "%$search%")
+                             ->orWhere('tujuan', 'like', "%$search%")
+                             ->orWhere('instansi', 'like', "%$search%")
+                             ->orWhere('no_hp', 'like', "%$search%");
+            })
+            ->paginate(5); // Pagination, menampilkan 5 data per halaman
+
+        // Mengembalikan tampilan dengan data tamu dan hasil pencarian
         return view('guest.index', compact('guests'));
-        // Mengambil semua data tamu
-        $guests = Guest::all();
-        return view('guest.index', compact('guests')); // Pastikan view 'guest.index' ada
     }
 
     public function create()
@@ -37,7 +47,7 @@ class GuestController extends Controller
         ]);
 
         // Ambil data foto Base64
-        $fotoData = $request->foto; 
+        $fotoData = $request->foto;
 
         // Pisahkan data Base64 menjadi tipe dan konten
         if (preg_match('/^data:image\/(\w+);base64,/', $fotoData, $type)) {
@@ -100,7 +110,7 @@ class GuestController extends Controller
 
         // Jika ada foto baru, proses dan simpan foto
         if ($request->has('foto') && !empty($request->foto)) {
-            $fotoData = $request->foto; 
+            $fotoData = $request->foto;
             $image_parts = explode(";base64,", $fotoData);
             $image_type_aux = explode("image/", $image_parts[0]);
             $image_type = $image_type_aux[1];

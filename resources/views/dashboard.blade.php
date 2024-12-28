@@ -27,7 +27,7 @@
             // Menyusun chart
             const ctx = document.getElementById('guestsChart').getContext('2d');
             const chart = new Chart(ctx, {
-                type: 'pie', // Tipe chart, bisa juga 'bar', 'pie', dll.
+                type: 'bar', // Tipe chart, bisa juga 'bar', 'pie', dll.
                 data: {
                     labels: labels, // Tanggal sebagai label di sumbu X
                     datasets: [{

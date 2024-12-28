@@ -5,7 +5,19 @@
 @section('contents')
     <div class="container">
         <h1>List Data Tamu</h1>
-        <a href="{{ route('guest.create') }}" class="btn btn-primary">Tambah Tamu</a>
+
+        <!-- Search bar dan tombol tambah tamu -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <!-- Search bar -->
+            <form action="{{ route('guest.index') }}" method="GET" class="form-inline">
+                <input type="text" name="search" class="form-control" placeholder="Cari tamu..." value="{{ request('search') }}">
+                <button type="submit" class="btn btn-primary ml-2">Cari</button>
+            </form>
+
+            <!-- Tombol tambah tamu -->
+            <a href="{{ route('guest.create') }}" class="btn btn-primary">Tambah Tamu</a>
+        </div>
+
         <table class="table table-striped mt-3">
             <thead>
                 <tr>
