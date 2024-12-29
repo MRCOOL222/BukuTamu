@@ -22,6 +22,7 @@ class AuthController extends Controller
         $request->validate([
             'username' => 'required|string', // Validasi username
             'password' => 'required|string', // Validasi password
+            'g-recaptcha-response' => 'required',
         ]);
 
         // Coba login dengan username dan password yang diberikan

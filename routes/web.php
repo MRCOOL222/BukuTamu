@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ProfileController;
+use App\Exports\GuestsExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,4 +25,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 
 // Route untuk CRUD Guest menggunakan controller dan prefix 'guest'
 Route::resource('guest', GuestController::class);
+
+// Route Export Excel
+Route::get('/export-guests', function () {
+    return Excel::download(new GuestsExport, 'guests.xlsx');
+})->name('guest.export');
 

@@ -31,9 +31,9 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 120),
+    'lifetime' => 15, // Sesi akan otomatis habis setelah 15 menit
 
-    'expire_on_close' => false,
+    'expire_on_close' => true, // Set ke true jika ingin sesi habis saat browser ditutup
 
     /*
     |--------------------------------------------------------------------------
@@ -168,7 +168,7 @@ return [
     |
     */
 
-    'secure' => env('SESSION_SECURE_COOKIE'),
+    'secure' => env('SESSION_SECURE_COOKIE', true), // Pastikan true jika menggunakan HTTPS
 
     /*
     |--------------------------------------------------------------------------

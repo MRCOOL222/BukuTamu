@@ -14,6 +14,7 @@
   
   <!-- Custom styles for this template-->
   <link href="{{ asset('admin_assets/css/sb-admin-2.min.css') }}" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body id="page-top">
   <!-- Page Wrapper -->
@@ -45,7 +46,6 @@
   
           <!-- Content Row -->
   
-  
         </div>
         <!-- /.container-fluid -->
   
@@ -76,5 +76,35 @@
   <script src="{{ asset('admin_assets/js/sb-admin-2.min.js') }}"></script>
   <!-- Page level plugins -->
   <script src="{{ asset('admin_assets/vendor/chart.js/Chart.min.js') }}"></script>
+
+  <!-- SweetAlert Notifications -->
+  <script>
+    // SweetAlert untuk session expired atau pesan lainnya
+    @if(session('session_expired'))
+        Swal.fire({
+            icon: 'info',
+            title: 'Sesi Berakhir',
+            text: '{{ session('session_expired') }}',
+            confirmButtonText: 'OK'
+        });
+    @endif
+
+    @if(session('error'))
+        Swal.fire({
+            icon: 'error',
+            title: 'Login Gagal',
+            text: '{{ session('error') }}',
+        });
+    @endif
+
+    @if(session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: '{{ session('success') }}',
+        });
+    @endif
+  </script>
+
 </body>
 </html>

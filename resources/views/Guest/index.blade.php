@@ -14,15 +14,18 @@
                 <button type="submit" class="btn btn-primary ml-2">Cari</button>
             </form>
 
-            <!-- Tombol tambah tamu -->
-            <a href="{{ route('guest.create') }}" class="btn btn-primary">Tambah Tamu</a>
+            <!-- Tombol tambah tamu dan export -->
+            <div>
+                <a href="{{ route('guest.create') }}" class="btn btn-primary">Tambah Tamu</a>
+                <a href="{{ route('guest.export') }}" class="btn btn-success">Export to Excel</a>
+            </div>
         </div>
 
         <table class="table table-striped mt-3">
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>Tanggal</th> <!-- Tambahkan kolom tanggal -->
+                    <th>Tanggal</th>
                     <th>Nama</th>
                     <th>Alamat</th>
                     <th>Tujuan</th>
@@ -36,7 +39,7 @@
                 @foreach ($guests as $index => $rs)
                     <tr>
                         <td>{{ ($guests->currentPage() - 1) * $guests->perPage() + $loop->iteration }}</td>
-                        <td>{{ \Carbon\Carbon::parse($rs->tanggal)->format('Y-m-d') }}</td> <!-- Format tanggal -->
+                        <td>{{ \Carbon\Carbon::parse($rs->tanggal)->format('Y-m-d') }}</td>
                         <td>{{ $rs->nama }}</td>
                         <td>{{ $rs->alamat }}</td>
                         <td>{{ $rs->tujuan }}</td>
