@@ -11,10 +11,8 @@ class GuestController extends Controller
     // Menampilkan daftar tamu
     public function index(Request $request)
     {
-        // Ambil input pencarian
         $search = $request->input('search');
 
-        // Query untuk mengambil tamu berdasarkan pencarian
         $guests = Guest::query()
             ->when($search, function ($query) use ($search) {
                 return $query->where('nama', 'like', "%$search%")
@@ -23,52 +21,31 @@ class GuestController extends Controller
                              ->orWhere('instansi', 'like', "%$search%")
                              ->orWhere('no_hp', 'like', "%$search%");
             })
-            ->paginate(5); // Pagination, menampilkan 5 data per halaman
+            ->paginate(5);
 
-        // Mengembalikan tampilan dengan data tamu dan hasil pencarian
         return view('guest.index', compact('guests'));
     }
 
+    // Menampilkan form tambah tamu
     public function create()
     {
         return view('guest.create');
     }
 
+    // Menyimpan data tamu baru
     public function store(Request $request)
     {
-        // Validasi input
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
             'tujuan' => 'required|string|max:255',
             'instansi' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
-            'foto' => 'required|string', // Pastikan Base64 valid
+            'foto' => 'required|string', // Validasi untuk Base64
         ]);
 
-        // Ambil data foto Base64
-        $fotoData = $request->foto;
-
-        // Pisahkan data Base64 menjadi tipe dan konten
-        if (preg_match('/^data:image\/(\w+);base64,/', $fotoData, $type)) {
-            $imageType = strtolower($type[1]); // jpg, png, gif, etc.
-
-            // Validasi tipe file
-            if (!in_array($imageType, ['jpg', 'jpeg', 'png', 'gif'])) {
-                return back()->withErrors(['foto' => 'Format gambar tidak didukung!']);
-            }
-
-            $imageBase64 = base64_decode(substr($fotoData, strpos($fotoData, ',') + 1));
-
-            // Generate nama file yang unik
-            $fotoName = uniqid() . '.' . $imageType;
-
-            // Simpan ke folder storage/app/public/uploads
-            $filePath = 'uploads/' . $fotoName; // Path relatif untuk database
-            Storage::disk('public')->put($filePath, $imageBase64);
-        } else {
-            return back()->withErrors(['foto' => 'Format data gambar tidak valid!']);
-        }
+        // Proses Base64 ke file
+        $filePath = $this->processBase64Image($request->foto);
 
         // Simpan data tamu ke database
         $guest = new Guest();
@@ -78,58 +55,41 @@ class GuestController extends Controller
         $guest->instansi = $request->instansi;
         $guest->no_hp = $request->no_hp;
         $guest->foto = $filePath; // Simpan path relatif
-        $guest->tanggal = now(); // Simpan tanggal hari ini
+        $guest->tanggal = now();
         $guest->save();
 
         return redirect()->route('guest.index')->with('success', 'Data tamu berhasil disimpan!');
     }
 
-    // Menampilkan form untuk mengedit data tamu
+    // Menampilkan form edit tamu
     public function edit($id)
     {
-        // Mencari tamu berdasarkan ID
         $guest = Guest::findOrFail($id);
-        return view('guest.edit', compact('guest')); // Pastikan view 'guest.edit' ada
+        return view('guest.edit', compact('guest'));
     }
 
-    // Mengupdate data tamu
+    // Memperbarui data tamu
     public function update(Request $request, $id)
     {
-        // Validasi input
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
             'tujuan' => 'required|string|max:255',
             'instansi' => 'required|string|max:255',
             'no_hp' => 'required|string|max:20',
-            'foto' => 'nullable|string', // Validasi base64
+            'foto' => 'nullable|string',
         ]);
 
-        // Mencari tamu berdasarkan ID
         $guest = Guest::findOrFail($id);
 
-        // Jika ada foto baru, proses dan simpan foto
         if ($request->has('foto') && !empty($request->foto)) {
-            $fotoData = $request->foto;
-            $image_parts = explode(";base64,", $fotoData);
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type = $image_type_aux[1];
-            $image_base64 = base64_decode($image_parts[1]);
-
-            // Generate nama file foto yang unik
-            $fotoName = uniqid() . '.' . $image_type;
-
-            // Menyimpan foto ke folder public/uploads di storage
-            $filePath = storage_path('app/public/uploads/' . $fotoName);  // Menyimpan di storage/app/public/uploads
-            file_put_contents($filePath, $image_base64);
-
             // Hapus foto lama jika ada
-            if ($guest->foto && file_exists(storage_path('app/public/uploads/' . $guest->foto))) {
-                unlink(storage_path('app/public/uploads/' . $guest->foto));
+            if ($guest->foto && Storage::disk('public')->exists($guest->foto)) {
+                Storage::disk('public')->delete($guest->foto);
             }
 
-            // Update nama foto
-            $guest->foto = 'uploads/' . $fotoName;
+            // Proses Base64 ke file
+            $guest->foto = $this->processBase64Image($request->foto);
         }
 
         // Update data tamu
@@ -146,18 +106,39 @@ class GuestController extends Controller
     // Menghapus data tamu
     public function destroy($id)
     {
-        // Mencari tamu berdasarkan ID
         $guest = Guest::findOrFail($id);
 
         // Hapus foto terkait jika ada
-        if ($guest->foto && file_exists(storage_path('app/public/uploads/' . $guest->foto))) {
-            unlink(storage_path('app/public/uploads/' . $guest->foto));
+        if ($guest->foto && Storage::disk('public')->exists($guest->foto)) {
+            Storage::disk('public')->delete($guest->foto);
         }
 
-        // Hapus data tamu dari database
         $guest->delete();
 
-        // Redirect ke halaman index dengan pesan sukses
         return redirect()->route('guest.index')->with('success', 'Data tamu berhasil dihapus!');
+    }
+
+    // Fungsi untuk memproses Base64 ke file
+    private function processBase64Image($base64Image)
+    {
+        if (preg_match('/^data:image\/(\w+);base64,/', $base64Image, $type)) {
+            $imageType = strtolower($type[1]);
+
+            // Validasi tipe file
+            if (!in_array($imageType, ['jpg', 'jpeg', 'png', 'gif'])) {
+                throw new \Exception('Format gambar tidak didukung!');
+            }
+
+            $imageBase64 = base64_decode(substr($base64Image, strpos($base64Image, ',') + 1));
+            $fileName = uniqid() . '.' . $imageType;
+            $filePath = 'uploads/' . $fileName;
+
+            // Simpan file ke storage
+            Storage::disk('public')->put($filePath, $imageBase64);
+
+            return $filePath;
+        } else {
+            throw new \Exception('Format data gambar tidak valid!');
+        }
     }
 }
