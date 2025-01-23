@@ -19,7 +19,7 @@ class Guest extends Model
 
     // Cast tanggal ke format datetime:Y-m-d
     protected $casts = [
-        'tanggal' => 'datetime:Y-m-d', // Format otomatis ke Y-m-d
+        'tanggal' => 'datetime:Y-m-d', // Format otomatis ke D-m-y
     ];
 
     // Accessor untuk mendapatkan URL foto

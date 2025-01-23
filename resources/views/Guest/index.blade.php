@@ -6,19 +6,9 @@
     <div class="container">
         <h1>List Data Tamu</h1>
 
-        <!-- Search bar dan tombol tambah tamu -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <!-- Search bar -->
-            <form action="{{ route('guest.index') }}" method="GET" class="form-inline">
-                <input type="text" name="search" class="form-control" placeholder="Cari tamu..." value="{{ request('search') }}">
-                <button type="submit" class="btn btn-primary ml-2">Cari</button>
-            </form>
-
-            <!-- Tombol tambah tamu dan export -->
-            <div>
-                <a href="{{ route('guest.create') }}" class="btn btn-primary">Tambah Tamu</a>
-                <a href="{{ route('guest.export') }}" class="btn btn-success">Export to Excel</a>
-            </div>
+        <!-- Tombol tambah tamu -->
+        <div class="d-flex justify-content-end mb-3">
+            <a href="{{ route('guest.create') }}" class="btn btn-primary">Tambah Tamu</a>
         </div>
 
         <table class="table table-striped mt-3">
@@ -101,7 +91,7 @@
 
     <script>
         let guestIdToDelete = null;
-        
+
         function openDeleteModal(guestName, guestId) {
             // Tampilkan modal konfirmasi
             document.getElementById('guest-name').innerText = guestName;

@@ -8,30 +8,50 @@
     <form id="guestForm" method="POST" action="{{ route('guest.store') }}" enctype="multipart/form-data" novalidate>
         @csrf
         <div class="form-group">
-            <input type="text" class="form-control" name="nama" placeholder="Nama Pengunjung" required>
-            <div class="invalid-feedback">Nama Pengunjung wajib diisi.</div>
+            <input type="text" class="form-control @error('nama') is-invalid @enderror" name="nama" 
+                   placeholder="Nama Pengunjung" value="{{ old('nama') }}" required>
+            @error('nama')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
+
         <div class="form-group">
-            <input type="text" class="form-control" name="instansi" placeholder="Instansi Pengunjung" required>
-            <div class="invalid-feedback">Instansi Pengunjung wajib diisi.</div>
+            <input type="text" class="form-control @error('instansi') is-invalid @enderror" name="instansi" 
+                   placeholder="Instansi Pengunjung" value="{{ old('instansi') }}" required>
+            @error('instansi')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
+
         <div class="form-group">
-            <input type="text" class="form-control" name="alamat" placeholder="Alamat Pengunjung" required>
-            <div class="invalid-feedback">Alamat Pengunjung wajib diisi.</div>
+            <input type="text" class="form-control @error('alamat') is-invalid @enderror" name="alamat" 
+                   placeholder="Alamat Pengunjung" value="{{ old('alamat') }}" required>
+            @error('alamat')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
+
         <div class="form-group">
-            <input type="text" class="form-control" name="tujuan" placeholder="Tujuan Pengunjung" required>
-            <div class="invalid-feedback">Tujuan Pengunjung wajib diisi.</div>
+            <input type="text" class="form-control @error('tujuan') is-invalid @enderror" name="tujuan" 
+                   placeholder="Tujuan Pengunjung" value="{{ old('tujuan') }}" required>
+            @error('tujuan')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
+
         <div class="form-group">
-            <input type="text" class="form-control" name="no_hp" placeholder="No.HP Pengunjung" required>
-            <div class="invalid-feedback">No.HP Pengunjung wajib diisi.</div>
+            <input type="text" class="form-control @error('no_hp') is-invalid @enderror" name="no_hp" 
+                   placeholder="No.HP Pengunjung" value="{{ old('no_hp') }}" required>
+            @error('no_hp')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
         </div>
 
         <!-- Input hidden untuk foto -->
-        <input type="hidden" name="foto" id="foto_input" required>
-        <div class="invalid-feedback" id="fotoError">Foto Pengunjung wajib diisi.</div>
-
+        <input type="hidden" name="foto" id="foto_input" value="{{ old('foto') }}" required>
+        @error('foto')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
         <div class="form-group">
             <label for="foto">Ambil Foto Pengunjung:</label>
             <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#cameraModal">
@@ -56,7 +76,7 @@
             <div class="modal-body">
                 <video id="video" width="100%" height="auto" autoplay></video>
                 <canvas id="canvas" style="display: none;"></canvas>
-                <img id="foto" style="display: none;" src="" alt="Foto Pengunjung" width="100%">
+                <img id="foto" style="display: none;" src="{{ old('foto') }}" alt="Foto Pengunjung" width="100%">
 
                 <button type="button" class="btn btn-success btn-block" id="capture">Ambil Foto</button>
                 <button type="button" class="btn btn-warning btn-block" id="retake" style="display: none;">Pencet Ulang</button>
@@ -79,7 +99,6 @@
     const captureButton = document.getElementById('capture');
     const retakeButton = document.getElementById('retake');
     const fotoInput = document.getElementById('foto_input');
-    const fotoError = document.getElementById('fotoError');
 
     navigator.mediaDevices.getUserMedia({ video: true })
         .then(function (stream) {
@@ -101,7 +120,6 @@
         captureButton.style.display = 'none';
         retakeButton.style.display = 'block';
         fotoInput.value = dataUrl; // Simpan foto ke input tersembunyi
-        fotoError.style.display = 'none'; // Hilangkan pesan error
     });
 
     // Pencet ulang
@@ -112,22 +130,14 @@
         fotoInput.value = ''; // Clear the photo input
     });
 
-    // Validasi form
-    const form = document.getElementById('guestForm');
-    form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-            event.preventDefault();
-            event.stopPropagation();
+    // Menampilkan foto sebelumnya jika ada
+    document.addEventListener('DOMContentLoaded', function () {
+        if (fotoInput.value) {
+            foto.src = fotoInput.value;
+            foto.style.display = 'block';
+            captureButton.style.display = 'none';
+            retakeButton.style.display = 'block';
         }
-
-        // Validasi foto
-        if (!fotoInput.value) {
-            fotoError.style.display = 'block';
-            event.preventDefault();
-            event.stopPropagation();
-        }
-
-        form.classList.add('was-validated');
     });
 
     // SweetAlert Notification
