@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('alamat');
             $table->string('no_hp');
             $table->string('foto')->nullable();
-            $table->date('tanggal'); // Tambahkan kolom tanggal dengan tipe DATE
+            $table->date('tanggal');
+            $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']); // Kolom jenis kelamin
             $table->timestamps();
         });
     }

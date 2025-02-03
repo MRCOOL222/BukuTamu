@@ -21,6 +21,7 @@
                     <th>Tujuan</th>
                     <th>Instansi</th>
                     <th>No.HP</th>
+                    <th>Jenis Kelamin</th> <!-- Kolom Jenis Kelamin -->
                     <th>Foto</th>
                     <th>Aksi</th>
                 </tr>
@@ -35,12 +36,13 @@
                         <td>{{ $rs->tujuan }}</td>
                         <td>{{ $rs->instansi }}</td>
                         <td>{{ $rs->no_hp }}</td>
+                        <td>{{ ucfirst($rs->jenis_kelamin) }}</td> <!-- Menampilkan Jenis Kelamin -->
                         <td>
                             <!-- Menampilkan foto dari folder storage/uploads -->
                             <img src="{{ url($rs->foto) }}" alt="{{ $rs->foto }}" width="100" />
                         </td>
                         <td>
-                            <a href="{{ route('guest.edit', $rs->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <!-- Hanya tombol Hapus tanpa tombol Edit -->
                             <button type="button" class="btn btn-danger btn-sm" onclick="openDeleteModal('{{ $rs->nama }}', {{ $rs->id }})">Hapus</button>
                         </td>
                     </tr>

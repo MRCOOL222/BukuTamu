@@ -5,51 +5,17 @@
 @section('contents')
   <div class="row">
     <h3>Dashboard Buku Tamu</h3>
-    <canvas id="guestsChart" width="400" height="200"></canvas>
+    
+    <!-- Kotak untuk jumlah tamu saat ini -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card shadow-lg rounded" style="background-color: #f8f9fa; border-left: 5px solid #17a2b8;">
+        <div class="card-body text-center">
+          <h5 class="card-title" style="color: #17a2b8; font-weight: bold;">Jumlah Tamu Saat Ini</h5>
+          <p class="card-text" style="font-size: 3rem; color: #007bff; font-weight: bold;">
+            {{ number_format($guests->sum('total')) }}
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 @endsection
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Mengambil data tamu yang dikirim dari controller
-        const guestsData = @json($guests);
-
-        // Debugging, tampilkan data di konsol browser
-        console.log(guestsData);
-
-        // Pastikan data tersedia sebelum membuat chart
-        if (guestsData && guestsData.length > 0) {
-            // Mendapatkan tanggal dan jumlah tamu
-            const labels = guestsData.map(guest => guest.tanggal);
-            const data = guestsData.map(guest => guest.total);
-
-            // Menyusun chart
-            const ctx = document.getElementById('guestsChart').getContext('2d');
-            const chart = new Chart(ctx, {
-                type: 'bar', // Tipe chart, bisa juga 'bar', 'pie', dll.
-                data: {
-                    labels: labels, // Tanggal sebagai label di sumbu X
-                    datasets: [{
-                        label: 'Jumlah Tamu',
-                        data: data, // Jumlah tamu per tanggal
-                        borderColor: 'rgba(75, 192, 192, 1)', // Warna garis
-                        borderWidth: 2,
-                        fill: false, // Tidak ada area yang diwarnai di bawah garis
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true // Menampilkan sumbu Y dari angka 0
-                        }
-                    }
-                }
-            });
-        } else {
-            console.error('No data available for the chart');
-        }
-    });
-</script>

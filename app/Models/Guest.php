@@ -12,19 +12,16 @@ class Guest extends Model
 
     protected $table = 'guests';
 
-    // Tentukan atribut yang dapat diisi (fillable)
     protected $fillable = [
-        'id', 'nama', 'tujuan', 'instansi', 'alamat', 'no_hp', 'foto', 'tanggal'
+        'id', 'nama', 'tujuan', 'instansi', 'alamat', 'no_hp', 'foto', 'tanggal', 'jenis_kelamin'
     ];
 
-    // Cast tanggal ke format datetime:Y-m-d
     protected $casts = [
-        'tanggal' => 'datetime:Y-m-d', // Format otomatis ke D-m-y
+        'tanggal' => 'datetime:Y-m-d',
     ];
 
-    // Accessor untuk mendapatkan URL foto
     public function getFotoAttribute($value)
     {
-        return $value ? Storage::url($value) : null; // Menghasilkan URL foto dari folder public/uploads/
+        return $value ? Storage::url($value) : null;
     }
 }

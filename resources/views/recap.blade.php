@@ -67,34 +67,32 @@
         </div>
     </div>
 
-<!-- Modal Filter -->
-<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form action="{{ route('guest.recap') }}" method="GET">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="filterModalLabel">Filter Data</h5>
-                    <!-- Tombol X untuk menutup modal -->
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="start_date" class="form-label">Dari Tanggal</label>
-                        <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+    <!-- Modal Filter -->
+    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('guest.recap') }}" method="GET">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="filterModalLabel">Filter Data</h5>
+                        <!-- Tombol X untuk menutup modal -->
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="mb-3">
-                        <label for="end_date" class="form-label">Sampai Tanggal</label>
-                        <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}" max="{{ date('Y-m-d') }}">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="start_date" class="form-label">Dari Tanggal</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}" max="{{ date('Y-m-d') }}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="end_date" class="form-label">Sampai Tanggal</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}" max="{{ date('Y-m-d') }}">
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Filter</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
-
 @endsection
