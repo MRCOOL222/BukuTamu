@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 21, 2025 at 12:06 PM
+-- Generation Time: Feb 12, 2025 at 10:31 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.2.26
 
@@ -46,22 +46,19 @@ CREATE TABLE `failed_jobs` (
 CREATE TABLE `guests` (
   `id` bigint UNSIGNED NOT NULL,
   `nama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tujuan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `instansi` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tujuan_bidang` bigint UNSIGNED DEFAULT NULL,
+  `tujuan_pengunjung` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `instansi` enum('Dinas','Non Kedinasan') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_instansi` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `alamat` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `no_hp` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tanggal` date NOT NULL,
+  `jenis_kelamin` enum('l','p') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('sedang kunjungan','selesai kunjungan') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'sedang kunjungan',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `guests`
---
-
-INSERT INTO `guests` (`id`, `nama`, `tujuan`, `instansi`, `alamat`, `no_hp`, `foto`, `tanggal`, `created_at`, `updated_at`) VALUES
-(1, 'Fatih', 'pkl', 'smkn 1 ciomas', 'ciomas', '67394567840', 'uploads/6785d793bac77.png', '2025-01-14', '2025-01-13 20:18:45', '2025-01-13 20:18:45');
 
 -- --------------------------------------------------------
 
@@ -80,11 +77,10 @@ CREATE TABLE `migrations` (
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '2014_10_12_000000_create_users_table', 1),
-(2, '2014_10_12_100000_create_password_reset_tokens_table', 1),
-(3, '2019_08_19_000000_create_failed_jobs_table', 1),
-(4, '2019_12_14_000001_create_personal_access_tokens_table', 1),
-(5, '2024_12_15_075509_create_guests_table', 1);
+(7, '2014_10_12_000000_create_users_table', 1),
+(8, '2014_10_12_100000_create_password_reset_tokens_table', 1),
+(9, '2019_08_19_000000_create_failed_jobs_table', 1),
+(10, '2019_12_14_000001_create_personal_access_tokens_table', 1);
 
 -- --------------------------------------------------------
 
@@ -136,7 +132,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `created_at`, `updated_at`) VALUES
-(1, 'admin', '$2y$12$300S54i7lSOXiECgrZ.Riex6NohL3piBkfYC3PCFQb5zKnh.XiHN.', '2025-01-13 20:15:35', '2025-01-13 20:15:35');
+(1, 'admin', '$2y$12$G4IDEmh9UwTC/cQGmbb2hO4ltKO8aeV7BT2GubHwhdWVEyQGT3clu', '2025-02-12 03:29:37', '2025-02-12 03:29:37');
 
 --
 -- Indexes for dumped tables
@@ -196,13 +192,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `guests`
 --
 ALTER TABLE `guests`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`

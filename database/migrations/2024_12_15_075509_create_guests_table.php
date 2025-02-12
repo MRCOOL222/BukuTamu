@@ -14,13 +14,16 @@ return new class extends Migration
         Schema::create('guests', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('tujuan');
-            $table->string('instansi');
+            $table->foreignId('tujuan_bidang')->nullable()->constrained('work_fields')->onDelete('set null'); // Tambah relasi tujuan_bidang
+            $table->string('tujuan_pengunjung')->nullable();
+            $table->enum('instansi', ['Dinas', 'Non Kedinasan']);
+            $table->string('nama_instansi')->nullable();
             $table->string('alamat');
             $table->string('no_hp');
             $table->string('foto')->nullable();
             $table->date('tanggal');
-            $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']); // Kolom jenis kelamin
+            $table->enum('jenis_kelamin', ['l', 'p']);
+            $table->enum('status', ['sedang kunjungan', 'selesai kunjungan'])->default('sedang kunjungan'); // Tambahkan status
             $table->timestamps();
         });
     }

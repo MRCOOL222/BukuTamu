@@ -4,7 +4,7 @@
 
 @section('contents')
     <div class="container">
-        <h1></h1>
+        <h1>Rekap Data Tamu</h1>
 
         <!-- Search bar dan tombol Filter -->
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -14,7 +14,7 @@
                 <button type="submit" class="btn btn-primary ml-2">Cari</button>
             </form>
 
-            <!-- Tombol Filter -->
+            <!-- Tombol Filter & Export -->
             <div>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
                     Filter
@@ -33,10 +33,12 @@
                     <th>Tanggal</th>
                     <th>Nama</th>
                     <th>Alamat</th>
+                    <th>JK</th>
                     <th>Tujuan</th>
                     <th>Instansi</th>
                     <th>No.HP</th>
                     <th>Foto</th>
+                    <th>Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -46,16 +48,34 @@
                         <td>{{ \Carbon\Carbon::parse($rs->tanggal)->format('Y-m-d') }}</td>
                         <td>{{ $rs->nama }}</td>
                         <td>{{ $rs->alamat }}</td>
-                        <td>{{ $rs->tujuan }}</td>
-                        <td>{{ $rs->instansi }}</td>
+                        <td>{{ ucfirst($rs->jenis_kelamin) }}</td>
+                        <td>
+                            @if ($rs->workField && $rs->tujuan_pengunjung)
+                                ({{ $rs->workField->name }}) {{ $rs->tujuan_pengunjung }}
+                            @elseif ($rs->workField)
+                                ({{ $rs->workField->name }})
+                            @elseif ($rs->tujuan_pengunjung)
+                                {{ $rs->tujuan_pengunjung }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ($rs->instansi && $rs->nama_instansi)
+                                ({{ $rs->instansi }}) {{ $rs->nama_instansi }}
+                            @elseif ($rs->instansi)
+                                ({{ $rs->instansi }})
+                            @elseif ($rs->nama_instansi)
+                                {{ $rs->nama_instansi }}
+                            @endif
+                        </td>
                         <td>{{ $rs->no_hp }}</td>
                         <td>
                             <img src="{{ url($rs->foto) }}" alt="{{ $rs->foto }}" width="100" />
                         </td>
+                        <td id="status-text-{{ $rs->id }}">{{ $rs->status }}</td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center">Tidak ada data tamu yang ditemukan.</td>
+                        <td colspan="10" class="text-center">Tidak ada data tamu yang ditemukan.</td>
                     </tr>
                 @endforelse
             </tbody>
