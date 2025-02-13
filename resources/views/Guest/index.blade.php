@@ -1,10 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Data Tamu')
+@section('title', 'List Data Tamu')
 
 @section('contents')
     <div class="container">
-        <h1>List Data Tamu</h1>
 
         <div class="d-flex justify-content-end mb-3">
             <a href="{{ route('guest.create') }}" class="btn btn-primary">Tambah Tamu</a>
